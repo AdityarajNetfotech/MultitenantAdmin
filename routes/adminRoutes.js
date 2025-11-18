@@ -1,6 +1,9 @@
 // routes/adminRoutes.js
 import express from 'express';
 import { registerRMG, registerHR } from '../controllers/adminController.js';
+import { getAllRMG } from '../controllers/adminController.js';
+import { updateRmg } from '../controllers/adminController.js';
+import { deleteRmg,getAllHR,getRecruiterById,deleteHR,updateHR } from '../controllers/adminController.js';
 import { protect } from '../middlewares/auth.js';
 import { authorize } from '../middlewares/roles.js';
 
@@ -15,5 +18,13 @@ router.post('/rmg', registerRMG);
 
 // POST /api/admin/hr
 router.post('/hr', registerHR);
+router.get('/allrmg', protect, getAllRMG);
+router.get('/allhr', protect, getAllHR);
+router.get('/recruiter/:id', protect, getRecruiterById);
+router.put('/rmg/:id', protect, updateRmg);
+router.put('/hr/:id', protect, updateHR);
+router.delete('/rmg/:id', protect, deleteRmg);
+router.delete('/hr/:id', protect, deleteHR);
+
 
 export default router;

@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
       return ['RMG', 'HR'].includes(this.role);
     },
   },
+  lastlogin: { type: Date },
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });

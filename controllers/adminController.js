@@ -69,6 +69,87 @@ export const registerRMG = asyncHandler(async (req, res, next) => {
  * Admin registers an HR user (multiple allowed).
  * Body: { name, email, company }
  */
+
+// export const getAllRMG = async(async (req, res, next) => {
+//   try {
+//     const rmgUsers = await User.find({ role: 'RMG' }).select('-password');
+//     res.status(200).json({ success: true, count: rmgUsers.length, data: rmgUsers });
+//   }
+//   catch (err) {
+//     return next(new ErrorResponse(err.message || 'Failed to fetch RMGs', 500));
+//   }
+// });
+export const getAllRMG = async (req, res, next) => {
+  try {
+    const rmgUsers = await User.find({ role: 'RMG' }).select('-password');
+    res.status(200).json({ success: true, count: rmgUsers.length, data: rmgUsers });
+  } catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to fetch RMGs', 500));
+  }
+};
+
+export const updateLastLogin = asyncHandler(async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { lastlogin: new Date() },
+      { new: true }
+    );
+
+    if (!user) {
+      return next(new ErrorResponse('User not found', 404));
+    }
+
+    res.status(200).json({ success: true, message: 'Last login updated', data: user });
+  } catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to update last login', 500));
+  }
+});
+
+export const updateRmg = asyncHandler(async (req, res, next) => {
+  try {
+    const rmgId = req.params.id;
+    const updates = req.body;
+    
+    const rmgUser = await User.findOneAndUpdate(
+      { _id: rmgId, role: 'RMG' },
+      updates,
+      { new: true }
+    ).select('-password');
+    
+    if (!rmgUser) {
+      return next(new ErrorResponse('RMG user not found', 404));
+    }
+    
+    res.status(200).json({ success: true, message: 'RMG updated', data: rmgUser });
+  }
+  catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to update RMG', 500));
+  }
+});
+
+export const deleteRmg = asyncHandler(async (req, res, next) => {
+  try {
+    const rmgId = req.params.id;
+    
+    const rmgUser = await User.findOneAndDelete(
+      { _id: rmgId, role: 'RMG' }
+    );
+    
+    if (!rmgUser) {
+      return next(new ErrorResponse('RMG user not found', 404));
+    }
+    
+    res.status(200).json({ success: true, message: 'RMG deleted' });
+  }
+  catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to delete RMG', 500));
+  }
+});
+
+
 export const registerHR = asyncHandler(async (req, res, next) => {
   const { name, email, company } = req.body;
   if (!name || !email || !company) {
@@ -135,3 +216,70 @@ const buildCredentialEmail = (name, email, password, role) => {
   </div>
   `;
 };
+
+export const getAllHR = asyncHandler(async (req, res, next) => {
+  try {
+    const recruiters = await User.find({ role: { $in: ['HR'] } }).select('-password');
+    res.status(200).json({ success: true, count: recruiters.length, data: recruiters });
+  } catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to fetch recruiters', 500));
+  }
+});
+export const getRecruiterById = asyncHandler(async (req, res, next) => {
+  try {
+    const recruiterId = req.params.id;
+    const recruiter = await User.findById(recruiterId).select('-password');
+
+    if (!recruiter || !['RMG', 'HR'].includes(recruiter.role)) {
+      return next(new ErrorResponse('Recruiter not found', 404));
+    }
+
+    res.status(200).json({ success: true, data: recruiter });
+  } catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to fetch recruiter', 500));
+  }
+});
+
+
+export const deleteHR = asyncHandler(async (req, res, next) => {
+  try {
+    const hrId = req.params.id;
+
+    const hrUser = await User.findOneAndDelete(
+      { _id: hrId, role: 'HR' }
+    );
+
+    if (!hrUser) {
+      return next(new ErrorResponse('HR user not found', 404));
+    }
+
+    res.status(200).json({ success: true, message: 'HR deleted' });
+  } catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to delete HR', 500));
+  }
+});
+
+export const updateHR = asyncHandler(async (req, res, next) => {
+  try {
+    const hrId = req.params.id;
+    const updates = req.body;
+
+    const hrUser = await User.findOneAndUpdate(
+      { _id: hrId, role: 'HR' },
+      updates,
+      { new: true }
+    ).select('-password');
+
+    if (!hrUser) {
+      return next(new ErrorResponse('HR user not found', 404));
+    }
+
+    res.status(200).json({ success: true, message: 'HR updated', data: hrUser });
+  } catch (err) {
+    return next(new ErrorResponse(err.message || 'Failed to update HR', 500));
+  }
+});
+
+// Additional admin controller functions can be added here      
+
+

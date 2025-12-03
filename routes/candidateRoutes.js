@@ -1,5 +1,5 @@
 import express from "express";
-import { registerCandidate, loginCandidate, applyJob, getAppliedJobs } from "../controllers/candidateController.js";
+import { registerCandidate, loginCandidate, applyJob, getAppliedJobs, getAllCandidates, sendBulkJDInvite } from "../controllers/candidateController.js";
 import { protect } from "../middlewares/auth.js";
 import multer from "multer";
 
@@ -10,5 +10,7 @@ router.post("/register", registerCandidate);
 router.post("/login", loginCandidate);
 router.post("/apply/:jdId", upload.single("resume"), applyJob);
 router.get("/applied-jobs", protect, getAppliedJobs);
+router.get("/", getAllCandidates);
+router.post("/bulk-invite/:jdId", sendBulkJDInvite);
 
 export default router;

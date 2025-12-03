@@ -1,4 +1,11 @@
 import Candidate from "../models/candidate.js";
+import sendEmail from '../utils/sendEmail.js';
+import { bulkJDInviteTemplate } from '../utils/emailTemplates/bulkJDInviteTemplate.js';
+/**
+ * Send bulk JD invite emails to selected candidates for a new opening
+ * Params: jdId (JobDescription id)
+ * Body: { candidateIds: [array of candidate _id] }
+ */
 import JD from "../models/jobDescription.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import errorResponse from "../utils/errorResponse.js";
@@ -113,3 +120,60 @@ function sendTokenResponse(candidate, statusCode, res) {
   const token = jwt.sign(payload, config.jwtSecret, { expiresIn: config.jwtExpire });
   res.status(statusCode).json({ success: true, token });
 }
+
+export const getAllCandidates = asyncHandler(async (req, res, next) => {
+  const candidates = await Candidate.find();
+  res.json({ success: true, candidates });
+});
+
+export const sendBulkJDInvite = asyncHandler(async (req, res, next) => {
+  const { jdId } = req.params;
+  const { candidateIds } = req.body;
+  if (!jdId || !Array.isArray(candidateIds) || candidateIds.length === 0) {
+    return next(new errorResponse('JD id and candidateIds are required', 400));
+  }
+
+  // Fetch JD details
+  const jd = await JD.findById(jdId);
+  if (!jd) {
+    return next(new errorResponse('Job Description not found', 404));
+  }
+
+  // Fetch candidates
+  const candidates = await Candidate.find({ _id: { $in: candidateIds } });
+  if (!candidates.length) {
+    return next(new errorResponse('No valid candidates found', 404));
+  }
+
+  // Build apply URL (customize as needed)
+  const applyUrl = `${process.env.FRONTEND_URL || 'https://your-portal.example.com'}/apply/${jdId}`;
+
+  // Send emails
+  let sentCount = 0;
+  for (const candidate of candidates) {
+    const html = bulkJDInviteTemplate(
+      candidate.name,
+      jd.jobSummary || jd.title || jd.jobTitle || 'Job Opening',
+      jd.companyName || 'Our Company',
+      applyUrl
+    );
+    try {
+      await sendEmail({
+        to: candidate.email,
+        subject: `New Opening: ${jd.jobSummary || jd.title || jd.jobTitle}`,
+        html
+      });
+      sentCount++;
+    } catch (e) {
+      // Optionally log or collect failed emails
+    }
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Bulk JD invites sent to ${sentCount} candidates.`,
+    jdId,
+    sentCount
+  });
+});
+

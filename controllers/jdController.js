@@ -168,3 +168,15 @@ export const getAllCandidatesAppliedToJD = asyncHandler(async (req, res, next) =
   if (!jd) return next(new ErrorResponse("JD not found", 404));
   res.status(200).json({ success: true, count: jd.appliedCandidates.length, data: jd.appliedCandidates });
 });
+
+export const getAssignedJDsByRMG = asyncHandler(async (req, res, next) => {
+  const jds = await JD.find({ createdBy: req.user._id })
+    .populate('offerId')
+    .populate('createdBy', 'name email');
+  res.status(200).json({ success: true, count: jds.length, data: jds });
+});
+
+export const getAssignedOffersByRMG = asyncHandler(async (req, res, next) => {
+  const offers = await Offer.find({ assignedTo: req.user._id, status: 'JD created' });
+  res.status(200).json({ success: true, count: offers.length, data: offers });
+});

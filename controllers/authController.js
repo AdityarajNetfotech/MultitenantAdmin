@@ -4,6 +4,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 import errorResponse from '../utils/errorResponse.js';
 import User from '../models/User.js';
 import { config } from '../config/index.js';
+import Candidate from '../models/Candidate.js';
 
 // @desc   Register user
 // @route  POST /api/auth/register
@@ -38,9 +39,25 @@ export const login = asyncHandler(async (req, res, next) => {
 // @desc   Get current user
 // @route  GET /api/auth/me
 // @access Private
-export const getMe = asyncHandler(async (req, res) => { 
-  const user = await User.findById(req.candidate.id);
+export const getCandidateMe = asyncHandler(async (req, res) => {
+  const user = await Candidate.findById(req.candidate.id);
   res.status(200).json({ success: true, data: user });
+});
+
+export const getUserMe = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found"
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
 });
 
 // helper 
@@ -50,10 +67,10 @@ const sendTokenResponse = (user, statusCode, res) => {
 
   // option: set httpOnly cookie
   const options = {
-    httpOnly: true, 
+    httpOnly: true,
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
   };
-  
+
   res
     .status(statusCode)
     .cookie('token', token, options)

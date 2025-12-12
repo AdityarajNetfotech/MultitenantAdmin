@@ -116,3 +116,4 @@ out/
 .docusaurus
 
 .svelte-kit
+changename.sh

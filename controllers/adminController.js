@@ -174,7 +174,7 @@ export const registerHR = asyncHandler(async (req, res, next) => {
   } catch (err) {
     return next(new ErrorResponse(err.message || 'Failed to create HR', 500));
   }
-});
+}); 
 
 /* Helper to build HTML credential email */
 const buildCredentialEmail = (name, number, email, password, role) => {
@@ -230,7 +230,7 @@ export const getAllHR = asyncHandler(async (req, res, next) => {
   }
 });
 export const getRecruiterById = asyncHandler(async (req, res, next) => {
-  try {
+  try { 
     const recruiterId = req.params.id;
     const recruiter = await User.findById(recruiterId).select('-password');
 
@@ -272,7 +272,7 @@ export const updateHR = asyncHandler(async (req, res, next) => {
       { _id: hrId, role: 'HR' },
       updates,
       { new: true }
-    ).select('-password');
+    ).select('-password'); 
     if (!hrUser) {
       return next(new ErrorResponse('HR user not found', 404));
     }

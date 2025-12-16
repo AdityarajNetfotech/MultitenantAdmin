@@ -69,6 +69,10 @@ export const createJDWithAI = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Not authorized to create JD for this offer.", 403));
   }
 
+  if (offer.isJDCreated) {
+    return next(new ErrorResponse("JD already created for this offer", 400));
+  }
+
   // Prepare additional details from HR
   const additionalDetails = {
     companyName,
@@ -112,8 +116,9 @@ export const createJDWithAI = asyncHandler(async (req, res, next) => {
     publicToken: generateUniqueToken(16),
   });
 
-  // Update offer status
+  // ✅ Update offer status AND isJDCreated
   offer.status = "JD created";
+  offer.isJDCreated = true; 
   await offer.save();
 
   res.status(201).json({

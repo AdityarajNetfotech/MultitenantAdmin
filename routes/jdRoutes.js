@@ -20,6 +20,7 @@ router.get("/all-candidates", protect, authorize("HR", "Admin"), getAllCandidate
 router.post("/:jdId/add-resume", protect, authorize("HR"), addresumeToJD);
 // router.get("/:jdId/candidates", protect, authorize("HR"), getAllCandidatesAppliedToJD); // Disabled HR-only route for candidates
 router.get("/:jdId/candidates", protectCandidate, getAllCandidatesAppliedToJD); // Enable for candidate JWT
+router.get("/:jdId/candidatess", protect, authorize("HR"), getAllCandidatesAppliedToJD); // Enable for candidate JWT
 // Route for filtered candidates only
 router.get("/:jdId/filtered-candidates", protect, authorize("HR"), getFilteredCandidatesForJD);
 router.get("/assigned-jds/hr", protect, authorize("HR"), getAssignedJDsByRMG);

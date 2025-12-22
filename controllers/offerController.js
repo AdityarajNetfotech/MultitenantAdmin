@@ -25,6 +25,7 @@ export const createOffer = asyncHandler(async(req, res, next) => {
         salary,
         currency,
         attachments,
+        companyName
 
     } = req.body;
 
@@ -52,6 +53,7 @@ export const createOffer = asyncHandler(async(req, res, next) => {
         salary,
         currency,
         attachments,
+        companyName,
         status:"JD pending",
         
     });

@@ -74,10 +74,17 @@ const sendTokenResponse = (user, statusCode, res) => {
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
   };
 
+  const userObj = user.toObject();
+  delete userObj.password;
+
   res
     .status(statusCode)
     .cookie('token', token, options)
-    .json({ success: true, token });
+    .json({ 
+      success: true,
+      user: userObj, 
+      token 
+    });
 };
 
 // @desc    Fetch company from external DB and save to local DB

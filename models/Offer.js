@@ -79,6 +79,10 @@ const offerSchema = new mongoose.Schema({
    isJDCreated:{
     type:Boolean,
     default:false
+   },
+   companyName:{
+    type:String,
+    required:true,
    }
 },{timestamps:true});
 

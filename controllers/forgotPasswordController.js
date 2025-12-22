@@ -1,5 +1,6 @@
 // controllers/forgotPasswordController.js
 import User from '../models/User.js';
+import { resetPasswordTemplate } from '../utils/emailTemplates/resetPasswordTemplate.js';
 import sendEmail from '../utils/sendEmail.js';
 import crypto from 'crypto';
 
@@ -20,10 +21,7 @@ export const forgotPassword = async (req, res, next) => {
   user.resetPasswordOTPExpiry = otpExpiry;
   await user.save();
 
-  const html = resetPasswordTemplate(
-    user.name,
-    otp
-  );
+  const html = resetPasswordTemplate({ name: user.name, otp });
 
   await sendEmail({
     to: user.email,

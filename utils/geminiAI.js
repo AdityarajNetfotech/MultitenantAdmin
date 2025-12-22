@@ -17,7 +17,6 @@ export const generateJDWithAI = async (offerDetails, additionalDetails) => {
 
 **Offer Details:**
 - Job Title: ${offerDetails.jobTitle}
-- Department/Description: ${offerDetails.description}
 - Location: ${offerDetails.location}${offerDetails.city ? `, ${offerDetails.city}` : ""}
 - Employment Type: ${offerDetails.employmentType}
 - Positions Available: ${offerDetails.positionAvailable}
@@ -28,7 +27,6 @@ export const generateJDWithAI = async (offerDetails, additionalDetails) => {
 
 **Additional HR Details:**
 - Company Name: ${additionalDetails.companyName || "Not specified"}
-- Department: ${additionalDetails.department || "Not specified"}
 - Key Responsibilities: ${additionalDetails.keyResponsibilities || "Not specified"}
 - Required Qualifications: ${additionalDetails.qualifications || "Not specified"}
 - Benefits: ${additionalDetails.benefits || "Not specified"}

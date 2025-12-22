@@ -52,8 +52,8 @@ export const createJDWithAI = asyncHandler(async (req, res, next) => {
   const { offerId } = req.params;
   const { 
     companyName, 
-    department, 
-    reportingManager, 
+    // department, 
+    // reportingManager, 
     keyResponsibilities, 
     qualifications, 
     benefits: additionalBenefits, 
@@ -76,8 +76,8 @@ export const createJDWithAI = asyncHandler(async (req, res, next) => {
   // Prepare additional details from HR
   const additionalDetails = {
     companyName,
-    department,
-    reportingManager,
+    // department,
+    // reportingManager,
     keyResponsibilities,
     qualifications,
     benefits: additionalBenefits,
@@ -104,8 +104,8 @@ export const createJDWithAI = asyncHandler(async (req, res, next) => {
     additionalNotes: additionalNotes || "",
     generatedByAI: true,
     companyName,
-    department,
-    reportingManager,
+    // department,
+    // reportingManager,
     keyResponsibilities,
     requiredQualifications: qualifications,
     additionalInfo,

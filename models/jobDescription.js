@@ -50,15 +50,15 @@ const jdSchema = new mongoose.Schema(
       default: "",
     },
 
-    department: {
-      type: String,
-      default: "",
-    },
+    // department: {
+    //   type: String,
+    //   default: "",
+    // },
 
-    reportingManager: {
-      type: String,
-      default: "",
-    },
+    // reportingManager: {
+    //   type: String,
+    //   default: "",
+    // },
 
     keyResponsibilities: {
       type: String,

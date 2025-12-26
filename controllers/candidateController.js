@@ -16,11 +16,11 @@ import { config } from "../config/index.js";
 
 // Register candidate
 export const registerCandidate = asyncHandler(async (req, res, next) => {
-  const { name, email, password, phone, skills } = req.body;
-  if (!name || !email || !password || !phone || !skills) return next(new errorResponse("All fields required", 400));
+  const { name, email, password, phone } = req.body;
+  if (!name || !email || !password || !phone ) return next(new errorResponse("All fields required", 400));
   const existing = await Candidate.findOne({ email });
   if (existing) return next(new errorResponse("Email already exists", 400));
-  const candidate = await Candidate.create({ name, email, password, phone, skills, resume: "" });
+  const candidate = await Candidate.create({ name, email, password, phone, resume: "" });
   sendTokenResponse(candidate, 201, res);
 });
 
